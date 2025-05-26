@@ -1,4 +1,3 @@
-const { io } = require("../app");
 const { sendMessage, getMessages } = require("../services/messageService");
 
 exports.sendMessage = async (req, res) => {

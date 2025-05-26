@@ -28,5 +28,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/v1', router);
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
-module.exports = { app, io };
