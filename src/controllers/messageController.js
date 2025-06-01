@@ -3,12 +3,19 @@ const { sendMessage, getMessages } = require("../services/messageService");
 exports.sendMessage = async (req, res) => {
   try {
     const { roomId } = req.params;
-    const { text, sender } = req.body;
+    const { text} = req.body;
     let files = [];
     // Get file URLs from upload middleware
     if (req.body.fileUrls && req.body.fileUrls.length > 0) {
       files = req.body.fileUrls;
     }
+
+    let sender = req.body.sender;
+
+    if(typeof sender === 'string'){
+      sender = JSON.parse(sender);
+    }
+
 
     if (!text && files.length === 0)
       return res.status(400).json({ error: "Missing text or files" });

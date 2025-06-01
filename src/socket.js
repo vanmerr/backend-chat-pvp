@@ -40,12 +40,12 @@ function setupSocket(server) {
 
     // Gửi tin nhắn trong phòng
     socket.on("chat-message", (roomId, message) => {
-      // io.to(roomId).emit('chat-message', message);
-      console.log(
-        `${message.sender.displayName} sent message "${message.text}"${
-          message.files.length > 0 ? ` and ${message.files.length} file(s)` : ""
-        } in "${roomId}"`
-      );
+      io.emit('new-message',({roomId, message}));
+      // console.log(
+      //   `${message.sender.displayName} sent message ${
+      //     message.files.length > 0 ? ` and ${message.files.length} file(s)` : ""
+      //   } in "${roomId}"`
+      // );
     });
 
     socket.on("disconnect", () => {

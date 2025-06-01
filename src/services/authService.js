@@ -1,9 +1,26 @@
 const { admin, db } = require('../configs/firebase');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 async function verifyFirebaseToken(idToken) {
   // Xác thực token với Firebase
   const decoded = await admin.auth().verifyIdToken(idToken);
   return decoded;
+}
+
+function generateTokens(user) {
+  const payload = {
+    uid: user.uid,
+    displayName: user.displayName,
+    provider: user.provider,
+  };
+
+  const accessToken = jwt.sign(payload, JWT_SECRET, { expiresIn: '15m' });
+  const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+  return { accessToken, refreshToken };
 }
 
 async function findOrCreateUser(decodedToken) {
@@ -31,4 +48,4 @@ async function findOrCreateUser(decodedToken) {
   return userDoc.data();
 }
 
-module.exports = { verifyFirebaseToken, findOrCreateUser };
+module.exports = { verifyFirebaseToken, findOrCreateUser, generateTokens };
